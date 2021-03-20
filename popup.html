@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>设置</title>
+  </head>
+  <body style="width: 400px; min-height: 150px">
+    <div>是否自动关闭成功页: <input type="checkbox" name="able" id="able" /></div>
+	<div>支付密码: <input type="password" id="password" name="password" /></div>
+    <div>支付延时:<input type="text" name="time" id="time" value=5000 /></div>
+	<hr />
+    <div>当前已有支付链接数: <span id="number"></span></div>
+    <div>支付笔数:<input type="text" name="payNumber" id="payNumber" /></div>
+    <button id="doPay">开始支付</button>
+    <hr />
+    <br />
+    <button id="clear">清空链接</button>
+    <script type="text/javascript" src="/js/popup.js"></script>
+  </body>
+</html>

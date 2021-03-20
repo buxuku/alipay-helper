@@ -1,0 +1,39 @@
+{
+  "manifest_version": 2,
+  "name": "支付宝辅助工具",
+  "version": "1.0",
+  "description": "自动支付订单,自动输入密码,支付失败自动重新支付,支付成功自动关闭标签页",
+  "author": "buxuku",
+  "homepage_url": "https://github.com/buxuku",
+  "icons": {
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "permissions": ["storage", "tabs"],
+  "background": {
+    "scripts": ["js/background.js"]
+  },
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.alipay.com/standard/result/payResult.htm?*"],
+      "js": ["js/result.js"]
+    },
+    {
+      "matches": ["https://consumeprod.alipay.com/record/advanced.htm"],
+      "js": ["js/payList.js"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": [
+        "https://*.alipay.com/standard/lightpay/lightPayCashier.htm?orderId=*"
+      ],
+      "js": ["js/pay.js"]
+    }
+  ],
+  "web_accessible_resources": ["js/inject.js"]
+}
