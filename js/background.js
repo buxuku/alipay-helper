@@ -28,6 +28,10 @@ chrome.extension.onMessage.addListener(function (
 function updateStatus() {
   chrome.browserAction.setBadgeText({ text: payLinks.length.toString() });
   chrome.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 255] });
+  var views = chrome.extension.getViews({ type: 'popup' });
+  if (views.length > 0) {
+    views[0].updateNumber();
+  }
 }
 
 function clear() {
@@ -46,6 +50,7 @@ function doPay(number, time) {
       return pay;
     } else {
       clearInterval(timer);
+      return () => {};
     }
   };
   var timer = setInterval(pay(), time);

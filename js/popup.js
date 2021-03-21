@@ -1,13 +1,20 @@
 ﻿const bg = chrome.extension.getBackgroundPage();
 console.log(bg, 'bg');
 const checkItem = document.getElementById('able');
+let createStatus = false;
+const createButton = document.getElementById('create');
+function updateCreateButton() {
+  createButton.innerHTML = `${createStatus ? '停止' : '开始'}创建订单`;
+}
 chrome.storage.sync.get(
-  { able: false, password: '111111', time: 5000 },
+  { able: false, password: '111111', time: 5000, create: false },
   function (item) {
     console.log(item, 'item');
     if (item.able) {
       checkItem.setAttribute('checked', item.able);
     }
+    createStatus = item.create;
+    updateCreateButton();
     document.getElementById('password').value = item.password;
     document.getElementById('time').value = item.time;
   }
@@ -22,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
 document.getElementById('doPay').addEventListener('click', function () {
   const value = document.getElementById('payNumber').value;
   const time = document.getElementById('time').value;
+  createAction();
   bg.doPay(+value, +time);
 });
 
@@ -40,3 +48,25 @@ document.getElementById('time').addEventListener('input', function () {
 });
 document.getElementById('number').innerHTML = bg.payLinks.length;
 document.getElementById('payNumber').value = bg.payLinks.length;
+
+function createAction() {
+  createStatus = !createStatus;
+  chrome.storage.sync.set({ create: createStatus });
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, {
+      action: 'create',
+      payload: createStatus,
+    });
+  });
+  updateCreateButton();
+}
+
+createButton.addEventListener('click', createAction);
+
+function updateNumber(){
+    document.getElementById('number').innerHTML = bg.payLinks.length;
+}
+// chrome.extension.onMessage.addListener(function (request) {
+//   if (request.action === 'add') {
+//   }
+// });
